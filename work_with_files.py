@@ -1,5 +1,3 @@
-from email.policy import default
-
 with open('recipes.txt', encoding='utf8') as f:
     cook_book = {}
     while True:
@@ -17,31 +15,22 @@ with open('recipes.txt', encoding='utf8') as f:
             ingredients_dish.append({'ingredient name': line[0], 'quantity': line[1], 'measure': line[2]})
         cook_book[dish] = ingredients_dish
 
+
+    def get_shop_list_by_dishes(list_dishes, person_count):
+        dictionary_ingredients = {}
+        for dishes in list_dishes:
+            if dishes in cook_book.keys():
+                for ingredients in cook_book[dishes]:
+                    ingredient_name = ingredients['ingredient name']
+                    if ingredient_name not in dictionary_ingredients.keys():
+                        dictionary_ingredients[ingredient_name] = {'measure': ingredients['measure'],
+                                                                   'quantity': int(
+                                                                       ingredients['quantity']) * person_count}
+                    else:
+                        plus = int(ingredients['quantity']) * person_count
+                        dictionary_ingredients[ingredient_name]['quantity'] += plus
+        return dictionary_ingredients
+
+
+    print(get_shop_list_by_dishes(['Омлет', 'Фахитос'], person_count=3))
 print(cook_book)
-
-
-person_count = int(input('Введите, пожалуйста, количество персон: '))
-
-
-list_dishes = []
-
-from collections import Counter
-
-
-def get_shop_list_by_dishes(list_dishes, person_count):
-    quantity_ingredients = []
-    dictionary_ingredients = {}
-    for dishes, ingredients_dish in cook_book.items():
-        list_dishes.append(dishes)
-        for ingredients in ingredients_dish:
-            quantity = ingredients['quantity']
-            ingredient_name = ingredients['ingredient name']
-            quantity_ingredients.append(ingredient_name)
-    counter = Counter(quantity_ingredients)
-    for key, value in counter.items():
-        result = value * int(ingredients['quantity']) * person_count
-        dictionary_ingredients[key] = {'quantity': result, 'measure': ingredients['measure']}
-    return dictionary_ingredients
-
-
-print(get_shop_list_by_dishes(list_dishes, person_count))
